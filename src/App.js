@@ -1,58 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+
 import './App.css';
-import { callUserApi } from './actions/user'; //import the call for api
+import RegForm from './RegForm';
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { locationName: '', fetchLocation: '' };
-	}
-	handleInputChange = (e) => {
-		let { locationName } = this.state;
-		locationName = e.target.value;
-		//setting the new state value to the component states
-		this.setState({
-			...this.state,
-			locationName,
-		});
-	};
-	handleClick = () => {
-		let { locationName, fetchLocation } = this.state;
-		callUserApi()
-			.then((result) => {
-				console.log(result, 'in component', result.data.title);
-				fetchLocation = result.data.title;
-				this.setState({ ...this.state, fetchLocation });
-			})
-			.catch((error) => {
-				console.log('error in api', error);
-			});
-	};
 	render() {
-		const { locationName, fetchLocation } = this.state;
-		console.log(locationName);
 		return (
-			<>
-				<input
-					type="text"
-					name="textLocation"
-					onChange={this.handleInputChange}
-				></input>
-				<input
-					type="button"
-					name="btnFetchWeather"
-					value="submit"
-					onClick={this.handleClick}
-				></input>
-				<input
-					type="text"
-					name="fetchLocation"
-					value={fetchLocation}
-				></input>
-			</>
+			<Router>
+				<Switch>
+					{/* <Route exact path='/public' component={Public}/>
+        <Route path="/protected" component={Protected} /> */}
+
+					<Route exact path="/" component={RegForm} />
+					<Route exact path="/success" component={Success} />
+					{/* <PrivateRoute exact path="/test-gfx" component = {TestGfx}  /> */}
+				</Switch>
+			</Router>
 		);
 	}
 }
 
+function Success() {
+	return <h3>Success</h3>;
+}
 export default App;
