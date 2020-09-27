@@ -5,8 +5,19 @@ import userApi from '../services/userApi'
 // export const callUserApi = (locationName) => {
 //     return userApi.get(`${locationName}`);
 // }
-
-export const callUserApi = () =>
-{
-    return userApi.get();
+const actionTypes = {
+    USER_FETCHED: 'USER_FETCHED',
+}
+export const callUserApi = (dispatch) => {
+    userApi.get().then(result => {
+        dispatch({
+            payload: {
+                userFetched: {
+                    userId: 25,
+                    userName: 'Gokul'
+                },
+            },
+            type: actionTypes.USER_FETCHED,
+        });
+    })
 }

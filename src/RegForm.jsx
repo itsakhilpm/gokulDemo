@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Container, Col, Row, Form, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { callUserApi } from './actions/user'; //import the call for api
+import { connect } from 'react-redux';
+import _isEqual from 'lodash/isEqual';
 
 class RegForm extends React.Component {
 	constructor(props) {
@@ -26,6 +28,11 @@ class RegForm extends React.Component {
 			},
 		};
 	}
+	componentDidUpdate(prevProps) {
+        if(!_isEqual(this.props, prevProps)){
+        }
+    }
+
 	handleInputChange = (e) => {
 		let {
 			locationName,
@@ -66,34 +73,35 @@ class RegForm extends React.Component {
 		// });
 	};
 	handleClick = () => {
-		let { locationName, fetchLocation, feelsLike_C, tempin_C } = this.state;
-		callUserApi(locationName)
-			.then((result) => {
-                this.setState({ userCreated: true });
-                
-				// console.log('the location', locationName);
-				// console.log('Result', result);
-				// console.log('the temperature in C', result.data.current.temp_c);
-				// console.log(
-				// 	'the feelslike_c in C',
-				// 	result.data.current.feelslike_c
-				// );
-				//console.log(result, 'in component', result.data.title);
-				// fetchLocation = result.data.title;
-				// this.setState({
-				// 	...this.state,
-				// 	tempin_C: result.data.current.temp_c,
-				// 	feelsLike_C: result.data.current.feelslike_c,
-				// });
-			})
-			.catch((error) => {
-				this.setState({
-					...this.state,
-					tempin_C: '',
-					feelsLike_C: '',
-				});
-				console.log('error in api', error);
-			});
+		// let { locationName, fetchLocation, feelsLike_C, tempin_C } = this.state;
+		let { dispatch } = this.props;
+		callUserApi(dispatch);
+		// .then((result) => {
+		// 	this.setState({ userCreated: true });
+
+		// 	// console.log('the location', locationName);
+		// 	// console.log('Result', result);
+		// 	// console.log('the temperature in C', result.data.current.temp_c);
+		// 	// console.log(
+		// 	// 	'the feelslike_c in C',
+		// 	// 	result.data.current.feelslike_c
+		// 	// );
+		// 	//console.log(result, 'in component', result.data.title);
+		// 	// fetchLocation = result.data.title;
+		// 	// this.setState({
+		// 	// 	...this.state,
+		// 	// 	tempin_C: result.data.current.temp_c,
+		// 	// 	feelsLike_C: result.data.current.feelslike_c,
+		// 	// });
+		// })
+		// .catch((error) => {
+		// 	this.setState({
+		// 		...this.state,
+		// 		tempin_C: '',
+		// 		feelsLike_C: '',
+		// 	});
+		// 	console.log('error in api', error);
+		// });
 	};
 	render() {
 		const {
@@ -115,6 +123,7 @@ class RegForm extends React.Component {
 				/>
 			);
 		}
+		console.log(this.props.userDetails);
 		return (
 			<React.Fragment>
 				<Container>
@@ -215,4 +224,9 @@ class RegForm extends React.Component {
 		);
 	}
 }
-export default RegForm;
+function mapStateToProps(state) {
+	return {
+		userDetails: state.user.userDetails,
+	};
+}
+export default connect(mapStateToProps)(RegForm);
